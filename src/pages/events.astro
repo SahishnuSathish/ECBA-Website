@@ -1,0 +1,170 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PhotoSlot from '../components/PhotoSlot.astro';
+import PhotoGallery from '../components/PhotoGallery.astro';
+import { intro, recurringEvents, gallery } from '../data/events';
+import { contact } from '../data/site';
+import { url } from '../lib/url';
+---
+
+<Base
+  title="Events"
+  description="The events ECBA hosts every year at UT Austin, including the Back2School Social and the freshman panel, with photos from the community."
+>
+  <PageHero eng="Events" biz="and the people who show up." lead={intro.lead} tone="wash" />
+
+  <section class="section" aria-labelledby="recurring-title">
+    <div class="wrap">
+      <h2 class="h-section" id="recurring-title">
+        <span class="voice-eng">Every year</span>
+      </h2>
+      <ul class="events" role="list">
+        {
+          recurringEvents.map((event, index) => (
+            <li class:list={['event', { 'event--flip': index % 2 === 1 }]}>
+              <PhotoSlot
+                label={event.photoLabel}
+                ratio="3 / 2"
+                tone={(['deep', 'mist', 'olive'] as const)[index % 3]}
+                class="event__photo"
+              />
+              <div class="event__body">
+                <p class="event__when">{event.when}</p>
+                <h3 class="voice-eng event__title">{event.title}</h3>
+                <p class="event__text">{event.body}</p>
+                {event.link && (
+                  <p class="event__link">
+                    <a href={url(event.link.href)}>{event.link.label}</a>
+                  </p>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="notice events__dates">
+        Dates change each semester, so we do not list them here. Upcoming events are announced on Instagram at{' '}
+        <a href={contact.instagramUrl} rel="noopener">{contact.instagramHandle}</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section surface-wash" aria-labelledby="gallery-title">
+    <div class="wrap">
+      <div class="gallery-head">
+        <h2 class="h-section" id="gallery-title">
+          <span class="voice-biz">Photos</span>
+        </h2>
+        <p class="small soft">Select a photo to enlarge it. Real event photos will replace these frames.</p>
+      </div>
+      <PhotoGallery items={gallery} id="events-gallery" />
+    </div>
+  </section>
+
+  <section class="section instagram on-dark" aria-labelledby="ig-title">
+    <div class="wrap instagram__inner">
+      <svg class="instagram__icon" viewBox="0 0 48 48" aria-hidden="true">
+        <rect x="6" y="6" width="36" height="36" rx="10"></rect>
+        <circle cx="24" cy="24" r="8.5"></circle>
+        <circle class="dot" cx="34.5" cy="13.5" r="2.2"></circle>
+      </svg>
+      <div>
+        <h2 class="h-section" id="ig-title">
+          <span class="voice-eng">{contact.instagramHandle}</span>
+        </h2>
+        <p class="instagram__text">Announcements, recaps and the occasional group photo, as they happen.</p>
+      </div>
+      <a class="btn btn--solid ext" href={contact.instagramUrl} rel="noopener">Follow on Instagram</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .events {
+    margin: var(--space-6) 0 0;
+  }
+  .event {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: var(--space-7);
+    align-items: center;
+    padding-block: var(--space-6);
+    border-top: var(--trace) solid var(--pcb-dark);
+  }
+  .event--flip :global(.event__photo) {
+    order: 2;
+  }
+  .event__when {
+    font-size: var(--text-sm);
+    font-weight: 640;
+    color: var(--pcb-olive);
+  }
+  .event__title {
+    margin-top: var(--space-2);
+    font-size: var(--text-xl);
+    line-height: 1.05;
+  }
+  .event__text {
+    margin-top: var(--space-4);
+    max-width: 48ch;
+  }
+  .event__link {
+    margin-top: var(--space-4);
+  }
+  .events__dates {
+    margin-top: var(--space-6);
+  }
+
+  .gallery-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-6);
+    margin-bottom: var(--space-5);
+  }
+
+  .instagram {
+    background: var(--pcb-deep);
+    color: var(--paper);
+  }
+  .instagram__inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-6);
+  }
+  .instagram__icon {
+    width: 4rem;
+    height: 4rem;
+    fill: none;
+    stroke: var(--pcb-lime);
+    stroke-width: 3;
+  }
+  .instagram__icon .dot {
+    fill: var(--pad-gold);
+    stroke: none;
+  }
+  .instagram__text {
+    margin-top: var(--space-2);
+    color: var(--pcb-mist);
+  }
+
+  @media (max-width: 52rem) {
+    .event {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+    .event--flip :global(.event__photo) {
+      order: 0;
+    }
+    .instagram__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+    .instagram__inner .btn {
+      justify-self: start;
+    }
+  }
+</style>

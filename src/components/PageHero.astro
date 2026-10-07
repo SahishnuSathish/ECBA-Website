@@ -1,0 +1,76 @@
+---
+/**
+ * Inner-page title block. The heading is set in two voices: the first line in the
+ * engineering sans, the second in the business serif.
+ */
+interface Props {
+  eng: string;
+  biz?: string;
+  lead?: string;
+  tone?: 'paper' | 'board' | 'wash';
+}
+const { eng, biz, lead, tone = 'paper' } = Astro.props;
+---
+
+<section class:list={['page-hero', `page-hero--${tone}`, { 'on-dark': tone === 'board' }]}>
+  <div class="wrap page-hero__inner">
+    <h1 class="h-page">
+      <span class="voice-eng">{eng}</span>
+      {biz && <span class="voice-biz">{biz}</span>}
+    </h1>
+    {lead && <p class="lead page-hero__lead">{lead}</p>}
+    <slot />
+  </div>
+  <svg class="page-hero__trace" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 40h420l22-22h180l22 22h556" vector-effect="non-scaling-stroke"></path>
+  </svg>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    padding-block: clamp(3rem, 2rem + 5vw, 6rem) clamp(3.5rem, 2rem + 5vw, 6rem);
+  }
+  .page-hero--board {
+    background: var(--pcb-board);
+    color: var(--paper);
+  }
+  .page-hero--wash {
+    background: var(--pcb-wash);
+  }
+  .page-hero h1 span {
+    display: block;
+  }
+  .page-hero .voice-biz {
+    margin-top: 0.08em;
+    color: var(--pcb-olive);
+  }
+  .page-hero--board .voice-biz {
+    color: var(--pcb-lime);
+  }
+  .page-hero__lead {
+    margin-top: var(--space-5);
+  }
+  .page-hero--board .page-hero__lead {
+    color: var(--pcb-mist);
+  }
+  .page-hero__inner > :global(.btn-row) {
+    margin-top: var(--space-6);
+  }
+  .page-hero__trace {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3.75rem;
+    fill: none;
+    stroke: var(--color-rule);
+    stroke-width: 2;
+  }
+  .page-hero--board .page-hero__trace {
+    stroke: var(--pcb-olive);
+  }
+  .page-hero--wash .page-hero__trace {
+    stroke: var(--pcb-mist);
+  }
+</style>

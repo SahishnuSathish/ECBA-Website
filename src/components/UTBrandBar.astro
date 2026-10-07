@@ -1,0 +1,43 @@
+---
+/**
+ * University brand bar. Matches the bar served by the UT WordPress theme on
+ * sites.utexas.edu/ecba: burnt orange, 39px tall, official knockout logo at 28px,
+ * aligned to the right edge of the page content, linking to utexas.edu.
+ * Do not restyle, animate or add content here. See docs/DESIGN.md.
+ */
+import { ut, org } from '../data/site';
+import { url } from '../lib/url';
+---
+
+<div class="ut-bar">
+  <div class="wrap ut-bar__inner">
+    <a class="ut-bar__link" href={ut.homeUrl}>
+      <img src={url('/ut-texas-informal-knockout.svg')} alt={org.university} width="123" height="28" />
+    </a>
+  </div>
+</div>
+
+<style>
+  .ut-bar {
+    background: var(--ut-burnt-orange);
+    height: 39px;
+  }
+  .ut-bar__inner {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+  }
+  .ut-bar__link {
+    display: block;
+    line-height: 0;
+  }
+  .ut-bar__link img {
+    height: 28px;
+    width: auto;
+  }
+  .ut-bar__link:focus-visible {
+    outline: 2px solid var(--ut-white);
+    outline-offset: 2px;
+  }
+</style>

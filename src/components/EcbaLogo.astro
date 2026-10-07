@@ -1,0 +1,83 @@
+---
+/**
+ * ECBA trace wordmark. Redrawn as SVG from the draft logo on the ECBA Canva palette board
+ * so it stays sharp at any size. Swap for the exported original when it is available.
+ */
+interface Props {
+  tone?: 'light' | 'dark';
+  class?: string;
+  title?: string;
+}
+const { tone = 'light', class: className, title } = Astro.props;
+---
+
+<svg
+  class:list={['ecba-logo', `ecba-logo--${tone}`, className]}
+  viewBox="0 0 435 185"
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  fill="none"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  stroke-width="10"
+>
+  <g class="l-a">
+    <path d="M108 14H27L13 28v92l14 14h81"></path>
+    <path d="M30 74h56"></path>
+  </g>
+  <g class="l-b"><path d="M214 14h-80l-14 14v92l14 14h80"></path></g>
+  <g class="l-a">
+    <path d="M240 134V14h54c15 0 25 12 25 28s-10 29-25 29h-38"></path>
+    <path d="M294 71c17 0 28 13 28 31s-11 32-28 32h-38"></path>
+  </g>
+  <g class="l-c">
+    <path d="M344 134 384 12l39 122"></path>
+    <path d="M10 171h376V89"></path>
+  </g>
+  <g class="vias" stroke-width="4">
+    <circle class="l-a" cx="108" cy="14" r="6"></circle>
+    <circle class="l-a" cx="108" cy="134" r="6"></circle>
+    <circle class="l-a" cx="86" cy="74" r="6"></circle>
+    <circle class="l-b" cx="214" cy="14" r="6"></circle>
+    <circle class="l-b" cx="214" cy="134" r="6"></circle>
+    <circle class="l-a" cx="240" cy="134" r="6"></circle>
+    <circle class="l-c" cx="344" cy="134" r="6"></circle>
+    <circle class="l-c" cx="423" cy="134" r="6"></circle>
+    <circle class="l-c" cx="10" cy="171" r="6"></circle>
+    <circle class="l-c" cx="386" cy="89" r="6"></circle>
+  </g>
+</svg>
+
+<style>
+  .ecba-logo {
+    height: 2.5rem;
+    width: auto;
+    overflow: visible;
+  }
+  .ecba-logo--light .l-a {
+    stroke: var(--pcb-sage);
+  }
+  .ecba-logo--light .l-b {
+    stroke: var(--pcb-olive);
+  }
+  .ecba-logo--light .l-c {
+    stroke: var(--pcb-dark);
+  }
+  .ecba-logo--light .vias circle {
+    fill: var(--paper);
+  }
+
+  .ecba-logo--dark .l-a {
+    stroke: var(--pcb-lime);
+  }
+  .ecba-logo--dark .l-b {
+    stroke: var(--pcb-mist);
+  }
+  .ecba-logo--dark .l-c {
+    stroke: var(--paper);
+  }
+  .ecba-logo--dark .vias circle {
+    fill: var(--pcb-deep);
+  }
+</style>

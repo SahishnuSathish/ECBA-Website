@@ -1,0 +1,51 @@
+---
+/** Closing call to action. Sends prospective students to the official admissions page. */
+import { program } from '../data/site';
+import { url } from '../lib/url';
+
+interface Props {
+  heading?: string;
+}
+const { heading = 'Thinking about Texas ECB?' } = Astro.props;
+---
+
+<section class="apply-band on-dark" aria-labelledby="apply-band-title">
+  <div class="wrap apply-band__inner">
+    <div>
+      <h2 class="h-section" id="apply-band-title">
+        <span class="voice-eng">{heading}</span>
+      </h2>
+      <p class="apply-band__text">
+        Admission runs through UT Austin and the Texas ECB Honors program, not through ECBA. Requirements and current
+        deadlines are on the official admissions page.
+      </p>
+    </div>
+    <div class="btn-row">
+      <a class="btn btn--solid ext" href={program.admissionsUrl} rel="noopener">Go to Texas ECB admissions</a>
+      <a class="btn btn--line" href={url('/apply')}>How applying works</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .apply-band {
+    background: var(--pcb-olive);
+    color: var(--paper);
+    padding-block: var(--space-8);
+  }
+  .apply-band__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) auto;
+    align-items: center;
+    gap: var(--space-6) var(--space-8);
+  }
+  .apply-band__text {
+    margin-top: var(--space-3);
+    max-width: 52ch;
+  }
+  @media (max-width: 56rem) {
+    .apply-band__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

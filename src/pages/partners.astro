@@ -1,0 +1,394 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PhotoSlot from '../components/PhotoSlot.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import { intro, reasons, waysToSupport, packages, eventFormats } from '../data/partners';
+import { contact } from '../data/site';
+import { mailto } from '../lib/url';
+
+const packetRequest = mailto(
+  contact.email,
+  `Sponsorship packet request (${packages.season})`,
+  'Hello ECBA,\n\nPlease send the current sponsorship packet.\n\nName:\nCompany:\n\nThank you.',
+);
+---
+
+<Base
+  title="Partners"
+  description="Recruit, sponsor and help develop UT Austin students earning both ECE Honors and Canfield Business Honors degrees. Sponsorship packages, event formats and how to get in touch."
+>
+  <PageHero eng="Partner with us." biz="Recruit tomorrow’s technical leaders." lead={intro.lead} tone="board">
+    <div class="btn-row">
+      <a class="btn btn--solid" href="#inquiry">Host an event</a>
+      {
+        packages.packetUrl ? (
+          <a class="btn btn--line ext" href={packages.packetUrl} rel="noopener">
+            Sponsorship packet
+          </a>
+        ) : (
+          <a class="btn btn--line" href={packetRequest}>
+            Request the sponsorship packet
+          </a>
+        )
+      }
+    </div>
+  </PageHero>
+
+  <section class="section who" aria-labelledby="who-title">
+    <div class="wrap who__inner">
+      <div>
+        <h2 class="h-section" id="who-title">
+          <span class="voice-eng">Who you meet</span>
+        </h2>
+        <p class="who__context">{intro.context}</p>
+        <PhotoSlot label="Members with a partner company on campus" ratio="16 / 10" tone="mist" class="who__photo" />
+      </div>
+      <ul class="who__reasons" role="list">
+        {
+          reasons.map((reason) => (
+            <li>
+              <span class="via" aria-hidden="true" />
+              <div>
+                <h3 class="h-item">{reason.title}</h3>
+                <p>{reason.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section surface-wash" aria-labelledby="ways-title">
+    <div class="wrap">
+      <h2 class="h-section" id="ways-title">
+        <span class="voice-eng">Ways to support</span>
+      </h2>
+      <ul class="ways" role="list">
+        {
+          waysToSupport.map((way) => (
+            <li>
+              <h3 class="voice-biz ways__title">{way.title}</h3>
+              <p>{way.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="packages-title">
+    <div class="wrap packages">
+      <div class="packages__head">
+        <h2 class="h-section" id="packages-title">
+          <span class="voice-eng">Sponsorship packages</span>
+        </h2>
+        <p>
+          From the {packages.season} corporate sponsorship packet. Sponsorships fund the events, workshops and community
+          programming that keep members engaged.
+        </p>
+      </div>
+
+      <div class="packages__scroll" tabindex="0" role="region" aria-labelledby="packages-title">
+        <table class="packages__table">
+          <thead>
+            <tr>
+              <th scope="col">Benefit</th>
+              {packages.tiers.map((tier) => <th scope="col">{tier.name}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {
+              packages.benefits.map((benefit) => (
+                <tr>
+                  <th scope="row">{benefit.label}</th>
+                  {packages.tiers.map((tier) => {
+                    const included = benefit[tier.id as 'platinum' | 'gold'];
+                    return (
+                      <td>
+                        {included ? (
+                          <>
+                            <span class="via packages__yes" aria-hidden="true" />
+                            <span class="visually-hidden">Included</span>
+                          </>
+                        ) : (
+                          <>
+                            <span class="packages__no" aria-hidden="true" />
+                            <span class="visually-hidden">Not included</span>
+                          </>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row">Per academic year</th>
+              {packages.tiers.map((tier) => <td class="voice-eng packages__price">{tier.price}</td>)}
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <p class="fine soft packages__foot">{packages.footnote}</p>
+      <div class="btn-row packages__actions">
+        {
+          packages.packetUrl ? (
+            <a class="btn btn--solid ext" href={packages.packetUrl} rel="noopener">
+              Open the sponsorship packet
+            </a>
+          ) : (
+            <a class="btn btn--solid" href={packetRequest}>
+              Request the sponsorship packet
+            </a>
+          )
+        }
+        <a class="btn btn--line" href={mailto(contact.email, `Becoming a ${packages.season} corporate partner`)}>
+          Email {contact.email}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section surface-board on-dark" id="formats" aria-labelledby="formats-title">
+    <div class="wrap">
+      <h2 class="h-section" id="formats-title">
+        <span class="voice-eng">Example events</span>
+      </h2>
+      <ul class="formats" role="list">
+        {
+          eventFormats.map((format) => (
+            <li>
+              <h3 class="h-item">{format.title}</h3>
+              <p class="small formats__length">{format.length}</p>
+              <p class="formats__body">{format.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="inquiry" aria-labelledby="inquiry-title">
+    <div class="wrap inquiry-section">
+      <div>
+        <h2 class="h-section" id="inquiry-title">
+          <span class="voice-eng">Host an event</span>
+        </h2>
+        <p class="lead inquiry-section__lead">Tell us what you have in mind and an officer will reply.</p>
+        <p class="inquiry-section__contact">
+          <a href={mailto(contact.email)}>{contact.email}</a><br />
+          <a href={contact.instagramUrl} rel="noopener">Instagram {contact.instagramHandle}</a>
+        </p>
+      </div>
+      <InquiryForm />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .who__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .who__context {
+    margin-top: var(--space-4);
+    max-width: 58ch;
+  }
+  .who__inner :global(.who__photo) {
+    margin-top: var(--space-6);
+  }
+  .who__reasons {
+    margin: 0;
+    border-left: var(--trace) solid var(--pcb-dark);
+  }
+  .who__reasons li {
+    position: relative;
+    padding: 0 0 var(--space-6) var(--space-5);
+  }
+  .who__reasons li:last-child {
+    padding-bottom: 0;
+  }
+  .who__reasons .via {
+    position: absolute;
+    left: calc(-0.375rem - 1px);
+    top: 0.4rem;
+  }
+  .who__reasons p {
+    margin-top: var(--space-2);
+    max-width: 44ch;
+  }
+
+  .ways {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-7);
+    margin: var(--space-6) 0 0;
+  }
+  .ways li {
+    padding-top: var(--space-4);
+    border-top: var(--trace) solid var(--pcb-dark);
+  }
+  .ways__title {
+    font-size: var(--text-xl);
+    line-height: 1.1;
+    color: var(--pcb-deep);
+  }
+  .ways p {
+    margin-top: var(--space-3);
+  }
+
+  .packages__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-4) var(--space-7);
+    align-items: end;
+    margin-bottom: var(--space-6);
+  }
+  .packages__head p {
+    max-width: 50ch;
+  }
+  .packages__scroll {
+    position: relative;
+    overflow-x: auto;
+  }
+  .packages__table {
+    width: 100%;
+    min-width: 30rem;
+    border-collapse: collapse;
+  }
+  .packages__table th,
+  .packages__table td {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .packages__table thead th {
+    font-size: var(--text-md);
+    font-weight: 740;
+    font-stretch: 108%;
+    border-bottom: var(--trace) solid var(--pcb-dark);
+  }
+  .packages__table th:first-child {
+    padding-left: 0;
+    text-align: left;
+    font-weight: 500;
+  }
+  .packages__table thead th:first-child {
+    font-size: var(--text-xs);
+    font-weight: 620;
+    color: var(--color-text-soft);
+    vertical-align: bottom;
+  }
+  .packages__table td,
+  .packages__table thead th:not(:first-child) {
+    width: 9.5rem;
+    text-align: center;
+  }
+  .packages__table td:nth-child(2),
+  .packages__table thead th:nth-child(2) {
+    background: var(--pcb-wash);
+  }
+  .packages__yes {
+    width: 1rem;
+    height: 1rem;
+    border-width: 4px;
+    background: var(--pcb-deep);
+  }
+  .packages__no {
+    display: inline-block;
+    width: 0.9rem;
+    height: 2px;
+    background: var(--color-rule);
+    vertical-align: middle;
+  }
+  .packages__table tfoot th,
+  .packages__table tfoot td {
+    border-bottom: var(--trace) solid var(--pcb-dark);
+  }
+  .packages__price {
+    font-size: var(--text-lg);
+    color: var(--pcb-deep);
+  }
+  .packages__foot {
+    margin-top: var(--space-3);
+  }
+  .packages__actions {
+    margin-top: var(--space-6);
+  }
+
+  .formats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-7);
+    margin: var(--space-6) 0 0;
+  }
+  .formats li {
+    padding-top: var(--space-4);
+    border-top: var(--trace) solid var(--pcb-moss);
+  }
+  .formats__length {
+    margin-top: var(--space-1);
+    color: var(--pcb-lime);
+  }
+  .formats__body {
+    margin-top: var(--space-3);
+    color: var(--pcb-mist);
+  }
+
+  .inquiry-section {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .inquiry-section__lead {
+    margin-top: var(--space-4);
+    font-size: var(--text-md);
+  }
+  .inquiry-section__contact {
+    margin-top: var(--space-5);
+    line-height: 2;
+  }
+
+  @media (max-width: 56rem) {
+    .who__inner,
+    .packages__head,
+    .inquiry-section,
+    .ways,
+    .formats {
+      grid-template-columns: 1fr;
+    }
+    .who__inner,
+    .inquiry-section {
+      gap: var(--space-6);
+    }
+    .ways,
+    .formats {
+      gap: var(--space-5);
+    }
+  }
+  @media (max-width: 36rem) {
+    .packages__table {
+      min-width: 0;
+    }
+    .packages__table th,
+    .packages__table td {
+      padding: var(--space-3) var(--space-2);
+    }
+    .packages__table td,
+    .packages__table thead th:not(:first-child) {
+      width: 5.25rem;
+    }
+    .packages__table thead th {
+      font-size: var(--text-base);
+    }
+    .packages__price {
+      font-size: var(--text-md);
+    }
+  }
+</style>

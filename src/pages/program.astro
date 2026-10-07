@@ -1,0 +1,358 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CoreGallery from '../components/CoreGallery.astro';
+import ApplyBand from '../components/ApplyBand.astro';
+import {
+  overview,
+  engineeringCourses,
+  businessCourses,
+  honorsRequirements,
+  testimonials,
+  sources,
+} from '../data/program';
+import { contact, program } from '../data/site';
+import { mailto } from '../lib/url';
+---
+
+<Base
+  title="Program"
+  description="What students study in Texas ECB Honors: ECE Honors and Canfield Business Honors coursework, the eight technical cores, and the skills the dual degree builds."
+>
+  <PageHero eng="Two honors degrees." biz="One cohort, four years." lead={overview.lead} />
+
+  <section class="section--tight about" aria-labelledby="about-title">
+    <div class="wrap about__inner">
+      <div class="prose">
+        <h2 class="visually-hidden" id="about-title">About the program</h2>
+        {overview.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      <aside class="about__skills">
+        <h2 class="h-item">Skills developed</h2>
+        <p>{overview.skills}</p>
+      </aside>
+    </div>
+    <div class="wrap">
+      <p class="notice about__notice">
+        This page is a student guide. The <a class="ext" href={program.academicsUrl} rel="noopener"
+          >Texas ECB academics page</a
+        > and your advisors are the authority on degree requirements.
+      </p>
+    </div>
+  </section>
+
+  <section class="section surface-wash" aria-labelledby="courses-title">
+    <div class="wrap">
+      <div class="courses__head">
+        <h2 class="h-section" id="courses-title">
+          <span class="voice-eng">Coursework,</span>
+          <span class="voice-biz">side by side</span>
+        </h2>
+        <p>
+          Both sets of honors courses run in parallel from the first semester. Course numbers follow the{' '}
+          <a class="ext" href={sources.flowchart.href} rel="noopener">{sources.flowchart.label}</a>.
+        </p>
+      </div>
+
+      <div class="layers">
+        <div class="layer layer--eng">
+          <h3 class="layer__title voice-eng">ECE Honors</h3>
+          <p class="small soft">Chandra Family Department of Electrical and Computer Engineering</p>
+          {
+            engineeringCourses.map((group) => (
+              <div class="layer__group">
+                <h4 class="layer__heading">{group.heading}</h4>
+                <ul role="list">
+                  {group.courses.map((course) => (
+                    <li>
+                      <span class="layer__course">{course.title}</span>
+                      <span class="layer__code">{course.code}</span>
+                    </li>
+                  ))}
+                </ul>
+                {group.note && <p class="fine soft layer__note">{group.note}</p>}
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="layers__via" aria-hidden="true">
+          <span class="via"></span>
+          <span class="via"></span>
+          <span class="via"></span>
+        </div>
+
+        <div class="layer layer--biz">
+          <h3 class="layer__title voice-biz">Canfield Business Honors</h3>
+          <p class="small soft">McCombs School of Business</p>
+          {
+            businessCourses.map((group) => (
+              <div class="layer__group">
+                <h4 class="layer__heading">{group.heading}</h4>
+                <ul role="list">
+                  {group.courses.map((course) => (
+                    <li>
+                      <span class="layer__course">{course.title}</span>
+                      <span class="layer__code">{course.code}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="honors">
+        <h3 class="h-item">To stay in honors</h3>
+        <dl class="honors__list">
+          {
+            honorsRequirements.map((item) => (
+              <div>
+                <dt class="voice-eng">{item.value}</dt>
+                <dd>{item.label}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cores-section" aria-labelledby="cores-title">
+    <div class="wrap cores-section__head">
+      <h2 class="h-section" id="cores-title">
+        <span class="voice-eng">Technical cores</span>
+      </h2>
+      <p class="measure">
+        At the end of sophomore year every ECE student picks an area to specialize in. ECB students complete seven
+        upper-division courses in theirs.
+      </p>
+    </div>
+    <CoreGallery />
+  </section>
+
+  <section class="section surface-wash voices" aria-labelledby="voices-title">
+    <div class="wrap voices__inner">
+      <h2 class="h-section" id="voices-title">
+        <span class="voice-biz">In students’ words</span>
+      </h2>
+      {
+        testimonials.length > 0 ? (
+          <ul class="voices__list" role="list">
+            {testimonials.map((item) => (
+              <li>
+                <blockquote>
+                  <p class="voices__quote">{item.quote}</p>
+                  <footer class="small">
+                    {item.name}, {item.classYear}. {item.track}
+                  </footer>
+                </blockquote>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div class="voices__empty">
+            <p class="lead">We are collecting stories from current students and will publish them here.</p>
+            <p>
+              In ECB and want to share what the program has been like?{' '}
+              <a href={mailto(contact.email, 'Student story for the ECBA site')}>Send us a few sentences</a>.
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <ApplyBand heading="Ready for both?" />
+</Base>
+
+<style>
+  .about__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .about__skills {
+    padding: var(--space-5) 0 0 var(--space-5);
+    border-top: var(--trace) solid var(--pcb-dark);
+    border-left: var(--trace) solid var(--pcb-dark);
+    border-top-left-radius: var(--chamfer);
+  }
+  .about__skills p {
+    margin-top: var(--space-3);
+    font-family: var(--font-serif);
+    font-size: var(--text-md);
+    line-height: 1.45;
+  }
+  .about__notice {
+    margin-top: var(--space-7);
+  }
+
+  .courses__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-5) var(--space-7);
+    align-items: end;
+    margin-bottom: var(--space-7);
+  }
+  .courses__head h2 span {
+    display: block;
+  }
+  .courses__head .voice-biz {
+    color: var(--pcb-olive);
+  }
+  .courses__head p {
+    max-width: 48ch;
+  }
+
+  /* Two layers of one board, joined by vias down the middle. */
+  .layers {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+  .layers__via {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: var(--trace);
+    background: var(--pcb-dark);
+  }
+  .layers__via .via {
+    background: var(--pcb-wash);
+  }
+  .layer__title {
+    font-size: var(--text-lg);
+    line-height: 1.1;
+  }
+  .layer--biz .layer__title {
+    font-size: calc(var(--text-lg) * 1.12);
+  }
+  .layer__title + p {
+    margin-top: var(--space-1);
+  }
+  .layer__group {
+    margin-top: var(--space-6);
+  }
+  .layer__heading {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--pcb-olive);
+    padding-bottom: var(--space-2);
+    border-bottom: var(--trace) solid var(--pcb-dark);
+  }
+  .layer ul {
+    margin: 0;
+  }
+  .layer li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-4);
+    padding-block: 0.6rem;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .layer--eng .layer__course {
+    font-weight: 560;
+    font-stretch: 104%;
+  }
+  .layer--biz .layer__course {
+    font-family: var(--font-serif);
+    font-size: 1.14em;
+    line-height: 1.3;
+  }
+  .layer__code {
+    flex: none;
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-soft);
+    white-space: nowrap;
+  }
+  .layer__note {
+    margin-top: var(--space-2);
+    max-width: 46ch;
+  }
+
+  .honors {
+    display: grid;
+    grid-template-columns: minmax(0, 0.3fr) minmax(0, 1fr);
+    gap: var(--space-5) var(--space-6);
+    align-items: baseline;
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
+    border-top: var(--trace) solid var(--pcb-dark);
+  }
+  .honors__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+  .honors__list dt {
+    font-size: var(--text-xl);
+    line-height: 1;
+    color: var(--pcb-deep);
+  }
+  .honors__list dd {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    max-width: 24ch;
+  }
+
+  .cores-section__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-4) var(--space-7);
+    align-items: end;
+    margin-bottom: var(--space-6);
+  }
+
+  .voices__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: var(--space-6) var(--space-7);
+  }
+  .voices__empty p + p {
+    margin-top: var(--space-4);
+  }
+  .voices__list {
+    display: grid;
+    gap: var(--space-6);
+    margin: 0;
+  }
+  .voices__quote {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    line-height: 1.4;
+    margin-bottom: var(--space-3);
+  }
+
+  @media (max-width: 56rem) {
+    .about__inner,
+    .courses__head,
+    .cores-section__head,
+    .voices__inner,
+    .honors {
+      grid-template-columns: 1fr;
+    }
+    .about__inner {
+      gap: var(--space-6);
+    }
+    .layers {
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+    }
+    .layers__via {
+      flex-direction: row;
+      width: 100%;
+      height: var(--trace);
+    }
+  }
+  @media (max-width: 36rem) {
+    .honors__list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

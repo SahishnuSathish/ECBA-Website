@@ -1,0 +1,199 @@
+---
+/**
+ * One drawn plate per technical core. These are illustrations, not photographs: the brief
+ * expected a photo per core, but none were supplied. Replace with imagery via CoreGallery
+ * if ECBA sources photos it has rights to.
+ */
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+
+const W = 400;
+const H = 300;
+
+// Small deterministic generator so the art is identical on every build.
+function rng(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 16807) % 2147483647;
+    return s / 2147483647;
+  };
+}
+
+const wave = (amp: number, freq: number, phase: number, y: number, env = false) => {
+  const pts: string[] = [];
+  for (let x = 0; x <= W; x += 4) {
+    const e = env ? Math.sin((x / W) * Math.PI) : 1;
+    pts.push(`${x},${(y + Math.sin((x / W) * Math.PI * 2 * freq + phase) * amp * e).toFixed(1)}`);
+  }
+  return `M${pts.join('L')}`;
+};
+
+const r = rng(id.length * 7919 + id.charCodeAt(0));
+const scatter = Array.from({ length: 46 }, () => {
+  const x = 30 + r() * 340;
+  const y = 250 - (x - 30) * 0.55 + (r() - 0.5) * 90;
+  return [x, Math.max(24, Math.min(276, y))];
+});
+
+const lattice: [number, number][] = [];
+for (let row = 0; row < 7; row++) {
+  for (let col = 0; col < 9; col++) {
+    lattice.push([28 + col * 44 + (row % 2) * 22, 30 + row * 40]);
+  }
+}
+---
+
+<svg class="core-art" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <rect class="bg" width={W} height={H}></rect>
+
+  {id === 'comms' && (
+    <g class="line">
+      <path d={wave(46, 9, 0, 150, true)} />
+      <path class="faint" d={wave(46, 1, Math.PI / 2, 150)} />
+      <path class="faint" d={wave(46, 1, -Math.PI / 2, 150)} />
+      <path class="accent" d="M0 262h400" />
+      {[40, 110, 180, 250, 320].map((x) => <path class="accent" d={`M${x} 262v-${10 + (x % 70)}`} />)}
+    </g>
+  )}
+
+  {id === 'circuits' && (
+    <g>
+      <rect class="panel" x="70" y="40" width="260" height="220" />
+      {Array.from({ length: 9 }, (_, i) => (
+        <>
+          <rect class="pad" x={84 + i * 27} y="26" width="14" height="14" />
+          <rect class="pad" x={84 + i * 27} y="260" width="14" height="14" />
+        </>
+      ))}
+      {Array.from({ length: 7 }, (_, i) => (
+        <>
+          <rect class="pad" x="56" y={56 + i * 28} width="14" height="14" />
+          <rect class="pad" x="330" y={56 + i * 28} width="14" height="14" />
+        </>
+      ))}
+      <g class="line">
+        <rect x="90" y="60" width="96" height="70" />
+        <rect x="200" y="60" width="110" height="34" />
+        <rect x="200" y="106" width="50" height="60" />
+        <rect x="262" y="106" width="48" height="60" />
+        <rect x="90" y="144" width="96" height="96" />
+        <rect x="200" y="180" width="110" height="60" />
+        <path class="faint" d="M100 160h76M100 176h76M100 192h76M100 208h76M100 224h76M212 72h86M212 82h86" />
+      </g>
+    </g>
+  )}
+
+  {id === 'energy' && (
+    <g class="line">
+      <circle class="accent-fill" cx="320" cy="70" r="30" />
+      <path d={wave(40, 2.5, 0, 180)} />
+      <path class="mid" d={wave(40, 2.5, (Math.PI * 2) / 3, 180)} />
+      <path class="faint" d={wave(40, 2.5, (Math.PI * 4) / 3, 180)} />
+      <path class="faint" d="M0 180h400" />
+    </g>
+  )}
+
+  {id === 'fields' && (
+    <g class="line">
+      {[30, 60, 90, 120, 150, 180, 210, 240].map((radius, i) => (
+        <path class={i % 2 ? 'faint' : ''} d={`M${120 + radius * 0.71} ${150 - radius * 0.71}A${radius} ${radius} 0 0 1 ${120 + radius * 0.71} ${150 + radius * 0.71}`} />
+      ))}
+      {[30, 60, 90].map((radius) => (
+        <path class="faint" d={`M${120 - radius * 0.71} ${150 - radius * 0.71}A${radius} ${radius} 0 0 0 ${120 - radius * 0.71} ${150 + radius * 0.71}`} />
+      ))}
+      <path class="accent thick" d="M120 96v108" />
+      <circle class="accent-fill" cx="120" cy="150" r="6" />
+    </g>
+  )}
+
+  {id === 'nano' && (
+    <g>
+      <g class="line faint">
+        {lattice.map(([x, y]) => <path d={`M${x} ${y}l22 40M${x} ${y}l-22 40M${x} ${y}h44`} />)}
+      </g>
+      {lattice.map(([x, y], i) => <circle class={i % 5 === 0 ? 'accent-fill' : 'atom'} cx={x} cy={y} r={i % 5 === 0 ? 7 : 5} />)}
+    </g>
+  )}
+
+  {id === 'architecture' && (
+    <g class="line">
+      <rect class="panel" x="40" y="40" width="130" height="90" />
+      <rect class="panel" x="190" y="40" width="80" height="90" />
+      <rect class="panel" x="290" y="40" width="70" height="220" />
+      <rect class="panel" x="40" y="170" width="230" height="90" />
+      <path class="accent thick" d="M40 150h320" />
+      <path d="M105 130v20M230 130v20M155 150v20M290 150h-0" />
+      <path class="faint" d="M56 62h98M56 78h98M56 94h60M206 62h48M206 78h48M206 94h48M306 62h38M306 84h38M306 106h38M306 128h38M306 150h38M306 172h38M306 194h38M306 216h38M56 192h198M56 208h198M56 224h140" />
+    </g>
+  )}
+
+  {id === 'data' && (
+    <g>
+      <g class="line faint"><path d="M30 24v252h346" /></g>
+      {scatter.map(([x, y], i) => <circle class={i % 6 === 0 ? 'accent-fill' : 'atom'} cx={x} cy={y} r="4.5" />)}
+      <g class="line"><path class="thick" d="M30 250C130 210 220 120 370 62" /></g>
+    </g>
+  )}
+
+  {id === 'software' && (
+    <g class="line">
+      <path d="M200 52v44M200 96L104 150M200 96l96 54M104 150l-48 60M104 150l48 60M296 150l-48 60M296 150l48 60" />
+      {[[200, 52], [200, 96], [104, 150], [296, 150], [56, 210], [152, 210], [248, 210], [344, 210]].map(([x, y], i) => (
+        <rect class={i === 0 ? 'accent-fill' : 'node'} x={x - 18} y={y - 11} width="36" height="22" rx="3" />
+      ))}
+      <path class="faint" d="M40 262h60M120 262h90M230 262h40M290 262h70" />
+    </g>
+  )}
+</svg>
+
+<style>
+  .core-art {
+    width: 100%;
+    height: 100%;
+  }
+  .bg {
+    fill: var(--art-bg, var(--pcb-deep));
+  }
+  .line :global(path),
+  .line :global(rect) {
+    fill: none;
+    stroke: var(--pcb-lime);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .line :global(.faint),
+  .line.faint :global(path) {
+    stroke: var(--pcb-moss);
+    stroke-width: 1.6;
+  }
+  .line :global(.mid) {
+    stroke: var(--pcb-mist);
+  }
+  .line :global(.accent) {
+    stroke: var(--pad-gold);
+  }
+  .line :global(.thick) {
+    stroke-width: 3.6;
+  }
+  .core-art :global(.panel) {
+    fill: rgb(181 202 118 / 0.07);
+    stroke: var(--pcb-moss);
+    stroke-width: 1.6;
+  }
+  .core-art :global(.pad),
+  .core-art :global(.accent-fill) {
+    fill: var(--pad-gold);
+    stroke: none;
+  }
+  .core-art :global(.atom) {
+    fill: var(--pcb-lime);
+  }
+  .core-art :global(.node) {
+    fill: var(--pcb-deep);
+    stroke: var(--pcb-lime);
+    stroke-width: 2.2;
+  }
+</style>

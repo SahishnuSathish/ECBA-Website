@@ -1,0 +1,265 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { officers, directoryPreview } from '../data/people';
+import { contact } from '../data/site';
+import { mailto } from '../lib/url';
+---
+
+<Base
+  title="People"
+  description="The officers who run ECBA at UT Austin, and a preview of the planned member and alumni directory."
+>
+  <PageHero
+    eng="People"
+    biz="who run the association."
+    lead="ECBA is led by students in the program. Officers are the first point of contact for companies, prospective students and members."
+  />
+
+  <section class="section--tight" aria-labelledby="officers-title">
+    <div class="wrap">
+      <div class="officers__head">
+        <h2 class="h-section" id="officers-title">
+          <span class="voice-eng">Officers</span>
+        </h2>
+        <p class="notice">
+          <strong>Layout preview.</strong> Officer names, roles and headshots have not been supplied yet, so the entries
+          below are placeholders. To reach the current officers, email{' '}
+          <a href={mailto(contact.email)}>{contact.email}</a>.
+        </p>
+      </div>
+      <ul class="officers" role="list">
+        {
+          officers.map((officer) => (
+            <li class="officer">
+              <div class="officer__portrait" aria-hidden="true">
+                <svg viewBox="0 0 80 100">
+                  <circle cx="40" cy="38" r="16" />
+                  <path d="M8 100c2-24 16-34 32-34s30 10 32 34" />
+                </svg>
+              </div>
+              <span class="sample-tag">Sample</span>
+              <h3 class="h-item officer__role">{officer.role}</h3>
+              <p class="officer__name">{officer.name}</p>
+              <p class="small soft">{officer.detail}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section surface-wash" aria-labelledby="directory-title">
+    <div class="wrap directory">
+      <div class="directory__intro">
+        <h2 class="h-section" id="directory-title">
+          <span class="voice-eng">Member and alumni directory</span>
+        </h2>
+        <p class="lead directory__lead">Planned, and not public.</p>
+        <p>
+          ECBA intends to keep an alphabetized directory of members and alumni for the community’s own use. It will
+          sit behind real sign-in and is not part of this site yet.
+        </p>
+        <p class="notice directory__notice">
+          <strong>Design preview with fictional people.</strong> No real member data is stored in this site. A
+          password box built into a public page would not protect anyone’s information, so access control is
+          deliberately left for a proper authentication system.
+        </p>
+      </div>
+
+      <div class="directory__preview" aria-label="Directory layout preview with sample data">
+        <div class="directory__bar">
+          <span class="directory__lock" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <rect x="5" y="11" width="14" height="9" rx="1.5"></rect>
+              <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+            </svg>
+          </span>
+          <span>Members only, once sign-in is available</span>
+          <span class="sample-tag">Sample data</span>
+        </div>
+        <table class="directory__table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Class</th>
+              <th scope="col">Technical component</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              directoryPreview.map((person) => (
+                <tr>
+                  <th scope="row">{person.name}</th>
+                  <td>{person.classYear}</td>
+                  <td>{person.track}</td>
+                  <td>{person.status}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .officers__head {
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+    gap: var(--space-4) var(--space-7);
+    align-items: end;
+    margin-bottom: var(--space-6);
+  }
+  .officers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: var(--space-6) var(--space-5);
+    margin: 0;
+    padding-bottom: var(--space-7);
+  }
+  .officer__portrait {
+    aspect-ratio: 4 / 5;
+    display: grid;
+    place-items: end center;
+    margin-bottom: var(--space-3);
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--pcb-mist);
+  }
+  .officer:nth-child(3n + 2) .officer__portrait {
+    background: var(--pcb-sage);
+  }
+  .officer:nth-child(3n) .officer__portrait {
+    background: var(--pcb-deep);
+  }
+  .officer__portrait svg {
+    width: 78%;
+    fill: rgb(253 252 246 / 0.55);
+  }
+  .officer__role {
+    margin-top: var(--space-2);
+  }
+  .officer__name {
+    margin-top: 0.1rem;
+  }
+
+  .directory {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .directory__lead {
+    margin-top: var(--space-3);
+    font-style: italic;
+    color: var(--pcb-olive);
+  }
+  .directory__intro > p + p {
+    margin-top: var(--space-4);
+  }
+  .directory__preview {
+    border: var(--trace) solid var(--pcb-dark);
+    border-radius: var(--radius-md);
+    background: var(--paper);
+    overflow: hidden;
+  }
+  .directory__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--pcb-deep);
+    color: var(--paper);
+    font-size: var(--text-sm);
+    font-weight: 620;
+  }
+  .directory__bar .sample-tag {
+    margin-left: auto;
+    border-color: var(--pcb-lime);
+    color: var(--pcb-lime);
+  }
+  .directory__lock svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: none;
+    stroke: var(--pcb-lime);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .directory__table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: var(--text-sm);
+  }
+  .directory__table th,
+  .directory__table td {
+    padding: 0.7rem var(--space-4);
+    border-bottom: 1px solid var(--color-rule);
+    vertical-align: baseline;
+  }
+  .directory__table thead th {
+    font-size: var(--text-xs);
+    font-weight: 620;
+    color: var(--color-text-soft);
+  }
+  .directory__table tbody th {
+    font-weight: 640;
+    white-space: nowrap;
+  }
+  .directory__table tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  @media (max-width: 60rem) {
+    .officers__head,
+    .directory {
+      grid-template-columns: 1fr;
+    }
+    .directory {
+      gap: var(--space-6);
+    }
+  }
+  @media (max-width: 40rem) {
+    .officers {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .directory__table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    .directory__table tr {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.1rem var(--space-3);
+      padding: 0.7rem var(--space-4);
+      border-bottom: 1px solid var(--color-rule);
+    }
+    .directory__table tbody tr:last-child {
+      border-bottom: 0;
+    }
+    .directory__table th,
+    .directory__table td {
+      padding: 0;
+      border: 0;
+    }
+    .directory__table td:nth-child(3) {
+      grid-column: 1 / -1;
+      color: var(--color-text-soft);
+    }
+    .directory__table td:nth-child(4) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .directory__table td:nth-child(2) {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,223 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { intro, steps, goodToKnow, faq } from '../data/apply';
+import { contact, program } from '../data/site';
+import { url, mailto } from '../lib/url';
+---
+
+<Base
+  title="Apply"
+  description="How to apply to the Texas ECB Honors program at UT Austin. ECBA is the student association; applications go through UT Austin Admissions."
+>
+  <PageHero eng="Apply to Texas ECB." biz="It starts with UT Admissions." lead={intro.lead} tone="board">
+    <div class="btn-row">
+      <a class="btn btn--solid ext" href={program.admissionsUrl} rel="noopener">Go to Texas ECB admissions</a>
+      <a class="btn btn--line" href={url('/program')}>See what you would study</a>
+    </div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="steps-title">
+    <div class="wrap steps-section">
+      <div class="steps-section__intro">
+        <h2 class="h-section" id="steps-title">
+          <span class="voice-eng">How it works</span>
+        </h2>
+        <p>
+          A summary of the steps on the official page, so you know what to expect. If anything here differs from{' '}
+          <a class="ext" href={program.admissionsUrl} rel="noopener">ecb.utexas.edu/admissions</a>, the official page
+          is right.
+        </p>
+      </div>
+      <ol class="steps" role="list">
+        {
+          steps.map((step, index) => (
+            <li>
+              <span class="steps__num voice-eng" aria-hidden="true">
+                {index + 1}
+              </span>
+              <div>
+                <h3 class="h-item">{step.title}</h3>
+                <p>{step.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section surface-wash" aria-labelledby="know-title">
+    <div class="wrap">
+      <h2 class="h-section" id="know-title">
+        <span class="voice-biz">Good to know</span>
+      </h2>
+      <ul class="know" role="list">
+        {
+          goodToKnow.map((item) => (
+            <li>
+              <h3 class="h-item">{item.title}</h3>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-title">
+    <div class="wrap faq-section">
+      <div>
+        <h2 class="h-section" id="faq-title">
+          <span class="voice-eng">Questions</span>
+        </h2>
+        <p class="faq-section__contact">
+          Ask a current student:<br />
+          <a href={mailto(contact.email, 'Question from a prospective student')}>{contact.email}</a><br />
+          <a href={contact.instagramUrl} rel="noopener">Instagram {contact.instagramHandle}</a>
+        </p>
+        <p class="faq-section__contact">
+          Ask the program:<br />
+          <a href={mailto(program.email)}>{program.email}</a>
+        </p>
+      </div>
+      <div class="faq">
+        {
+          faq.map((item) => (
+            <details>
+              <summary>
+                <span>{item.q}</span>
+                <span class="faq__mark" aria-hidden="true" />
+              </summary>
+              <p>{item.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .steps-section,
+  .faq-section {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .steps-section__intro p {
+    margin-top: var(--space-4);
+    max-width: 40ch;
+  }
+  .steps {
+    margin: 0;
+    counter-reset: none;
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--color-rule);
+  }
+  .steps li:first-child {
+    border-top: var(--trace) solid var(--pcb-dark);
+  }
+  .steps__num {
+    font-size: var(--text-xl);
+    line-height: 1;
+    color: var(--pcb-sage);
+  }
+  .steps p {
+    margin-top: var(--space-1);
+    max-width: 52ch;
+  }
+
+  .know {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-7);
+    margin: var(--space-6) 0 0;
+  }
+  .know li {
+    padding-top: var(--space-4);
+    border-top: var(--trace) solid var(--pcb-dark);
+  }
+  .know p {
+    margin-top: var(--space-2);
+  }
+
+  .faq-section__contact {
+    margin-top: var(--space-5);
+    line-height: 1.9;
+  }
+  .faq details {
+    border-top: 1px solid var(--color-rule);
+  }
+  .faq details:first-child {
+    border-top: var(--trace) solid var(--pcb-dark);
+  }
+  .faq details:last-child {
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .faq summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+    font-size: var(--text-md);
+    font-weight: 660;
+    font-stretch: 104%;
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__mark {
+    position: relative;
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  .faq__mark::before,
+  .faq__mark::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px;
+    margin-top: -1px;
+    background: var(--pcb-deep);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .faq__mark::after {
+    transform: rotate(90deg);
+  }
+  .faq details[open] .faq__mark::after {
+    transform: rotate(0deg);
+  }
+  .faq details p {
+    padding-bottom: var(--space-5);
+    max-width: 60ch;
+  }
+
+  @media (max-width: 56rem) {
+    .steps-section,
+    .faq-section,
+    .know {
+      grid-template-columns: 1fr;
+    }
+    .steps-section,
+    .faq-section {
+      gap: var(--space-6);
+    }
+    .know {
+      gap: var(--space-5);
+    }
+  }
+</style>

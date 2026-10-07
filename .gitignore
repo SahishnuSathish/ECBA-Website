@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+
+# Source brief and third-party reference material stay out of the repo
+*.pdf

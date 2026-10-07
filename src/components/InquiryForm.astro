@@ -1,0 +1,176 @@
+---
+/**
+ * Event-hosting inquiry. There is no form backend, so this composes an email in the
+ * visitor's own mail app. Nothing is sent or stored by the site, and the form says so.
+ */
+import { contact } from '../data/site';
+import { inquiryFormats } from '../data/partners';
+import { mailto } from '../lib/url';
+---
+
+<form class="inquiry" data-inquiry data-to={contact.email} novalidate>
+  <div class="inquiry__grid">
+    <div class="field">
+      <label for="inq-name">Your name</label>
+      <input id="inq-name" name="name" type="text" autocomplete="name" required />
+      <p class="field__error" id="inq-name-error" hidden>Enter your name so we know who to reply to.</p>
+    </div>
+    <div class="field">
+      <label for="inq-company">Company</label>
+      <input id="inq-company" name="company" type="text" autocomplete="organization" required />
+      <p class="field__error" id="inq-company-error" hidden>Enter your company.</p>
+    </div>
+    <div class="field">
+      <label for="inq-format">What you have in mind</label>
+      <select id="inq-format" name="format">
+        {inquiryFormats.map((format) => <option>{format}</option>)}
+      </select>
+    </div>
+    <div class="field">
+      <label for="inq-when">Timing <span class="field__optional">(optional)</span></label>
+      <input id="inq-when" name="when" type="text" aria-describedby="inq-when-hint" />
+      <p class="field__hint" id="inq-when-hint">A semester or a rough month is enough.</p>
+    </div>
+    <div class="field field--wide">
+      <label for="inq-notes">Anything else <span class="field__optional">(optional)</span></label>
+      <textarea id="inq-notes" name="notes" rows="4"></textarea>
+    </div>
+  </div>
+
+  <div class="inquiry__actions">
+    <button type="submit" class="btn btn--solid">Open email draft</button>
+    <p class="fine soft inquiry__note">
+      This opens a pre-filled message to {contact.email} in your email app. Nothing is sent until you send it.
+      Prefer to write your own? <a href={mailto(contact.email, 'Partnership inquiry')}>Email us directly</a>.
+    </p>
+  </div>
+  <p class="inquiry__status" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-inquiry]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('.inquiry__status');
+
+    const setError = (input: HTMLInputElement, show: boolean) => {
+      const error = document.getElementById(`${input.id}-error`);
+      if (!error) return;
+      error.hidden = !show;
+      input.setAttribute('aria-invalid', String(show));
+      if (show) input.setAttribute('aria-describedby', error.id);
+      else input.removeAttribute('aria-describedby');
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const value = (key: string) => String(data.get(key) ?? '').trim();
+
+      const required = Array.from(form.querySelectorAll<HTMLInputElement>('input[required]'));
+      const missing = required.filter((input) => !input.value.trim());
+      required.forEach((input) => setError(input, missing.includes(input)));
+      if (missing.length) {
+        missing[0].focus();
+        if (status) status.textContent = '';
+        return;
+      }
+
+      const subject = `${value('format')} with ECBA: ${value('company')}`;
+      const body = [
+        'Hello ECBA,',
+        '',
+        `${value('name')} from ${value('company')} here. We are interested in: ${value('format')}.`,
+        value('when') ? `Timing: ${value('when')}` : '',
+        value('notes') ? `\n${value('notes')}` : '',
+        '',
+        'Thank you,',
+        value('name'),
+      ]
+        .filter((line, index, all) => line !== '' || all[index - 1] !== '')
+        .join('\n');
+
+      // A real link click, so the visitor's mail app handles it like any other mailto link.
+      const link = document.createElement('a');
+      link.href = `mailto:${form.dataset.to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      link.hidden = true;
+      form.append(link);
+      link.click();
+      link.remove();
+      if (status) {
+        status.textContent = `Your email app should now show a draft. If nothing opened, write to ${form.dataset.to}.`;
+      }
+    });
+  });
+</script>
+
+<style>
+  .inquiry__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+  .field--wide {
+    grid-column: 1 / -1;
+  }
+  .field label {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-weight: 660;
+    font-size: var(--text-sm);
+  }
+  .field__optional {
+    font-weight: 400;
+    color: var(--color-text-soft);
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.65rem 0.8rem;
+    border: 2px solid var(--pcb-dark);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+    font-size: 1rem;
+  }
+  .field textarea {
+    resize: vertical;
+  }
+  .field input[aria-invalid='true'] {
+    border-color: #9a2a12;
+  }
+  .field__hint,
+  .field__error {
+    margin-top: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-soft);
+  }
+  .field__error {
+    color: #8a2410;
+    font-weight: 620;
+  }
+  .inquiry__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-5);
+    margin-top: var(--space-6);
+  }
+  .inquiry__note {
+    flex: 1 1 18rem;
+    max-width: 34rem;
+  }
+  .inquiry__status {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 620;
+  }
+  .inquiry__status:empty {
+    display: none;
+  }
+
+  @media (max-width: 40rem) {
+    .inquiry__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

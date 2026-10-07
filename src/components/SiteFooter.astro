@@ -1,0 +1,177 @@
+---
+import EcbaLogo from './EcbaLogo.astro';
+import { contact, nav, org, program, relatedLinks, ut, utFooterLinks } from '../data/site';
+import { url, mailto } from '../lib/url';
+---
+
+<footer class="site-footer">
+  <div class="site-footer__main on-dark">
+    <div class="wrap site-footer__grid">
+      <div class="site-footer__about">
+        <EcbaLogo tone="dark" title={org.short} />
+        <p class="site-footer__name">{org.name}</p>
+        <p class="fine site-footer__disclaimer">
+          {`ECBA is a student organization at ${org.university}. This is not the official site of the ${program.name} program; admissions and degree requirements are published at `}
+          <a href={program.homeUrl}>ecb.utexas.edu</a>.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="site-footer__heading">Contact</h2>
+        <ul role="list" class="site-footer__list">
+          <li><a href={mailto(contact.email)}>{contact.email}</a></li>
+          <li>
+            <a href={contact.instagramUrl} rel="noopener">Instagram {contact.instagramHandle}</a>
+          </li>
+          <li><a href={url('/partners#inquiry')}>Host an event</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="site-footer__heading">Site</h2>
+        <ul role="list" class="site-footer__list">
+          <li><a href={url('/')}>Home</a></li>
+          {nav.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}
+          <li><a href={url('/apply')}>Apply</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="site-footer__heading">UT ECB links</h2>
+        <ul role="list" class="site-footer__list">
+          {
+            relatedLinks.map((item) => (
+              <li>
+                <a class="ext" href={item.href} rel="noopener">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="ut-footer">
+    <div class="wrap ut-footer__inner">
+      <p>© <a href={ut.homeUrl}>{org.university}</a> {ut.copyrightYear}</p>
+      <nav aria-label="University-wide links">
+        <ul role="list">
+          {utFooterLinks.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer__main {
+    background: var(--pcb-deep);
+    color: var(--paper);
+    padding-block: var(--space-8) var(--space-7);
+  }
+  .site-footer__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.9fr) repeat(3, minmax(0, 1fr));
+    gap: var(--space-7) var(--space-6);
+  }
+  .site-footer__about :global(.ecba-logo) {
+    height: 3rem;
+  }
+  .site-footer__name {
+    margin-top: var(--space-4);
+    font-weight: 650;
+    font-stretch: 106%;
+    max-width: 22em;
+  }
+  .site-footer__disclaimer {
+    margin-top: var(--space-3);
+    max-width: 38em;
+    color: var(--pcb-mist);
+  }
+  .site-footer__heading {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    font-stretch: 108%;
+    color: var(--pcb-lime);
+  }
+  .site-footer__list {
+    margin-top: var(--space-3);
+  }
+  .site-footer__list li + li {
+    margin-top: var(--space-1);
+  }
+  .site-footer__list a {
+    display: inline-block;
+    padding-block: 0.3rem;
+    color: var(--paper);
+    text-decoration-color: rgb(253 252 246 / 0.35);
+  }
+  .site-footer__main a:hover {
+    text-decoration-color: currentColor;
+  }
+  .site-footer__disclaimer a {
+    color: var(--paper);
+  }
+
+  /* Required University links. Colors follow the footer bar on UT Drupal Kit sites. */
+  .ut-footer {
+    background: var(--ut-burnt-orange);
+    color: var(--ut-white);
+    font-size: 0.875rem;
+    padding-block: 1rem;
+  }
+  .ut-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-6);
+  }
+  .ut-footer a {
+    display: inline-block;
+    padding-block: 0.2rem;
+    color: var(--ut-white);
+  }
+  .ut-footer a:focus-visible {
+    outline-color: var(--ut-white);
+  }
+  .ut-footer ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) 0;
+    margin: 0;
+  }
+  .ut-footer li + li {
+    margin-left: 0.6rem;
+    padding-left: 0.6rem;
+    border-left: 1px solid var(--ut-white);
+  }
+
+  @media (max-width: 56rem) {
+    .site-footer__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .site-footer__about {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 34rem) {
+    .site-footer__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+    .ut-footer ul {
+      flex-direction: column;
+    }
+    .ut-footer li + li {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+    .ut-footer li a {
+      display: inline-block;
+      padding-block: 0.35rem;
+    }
+  }
+</style>

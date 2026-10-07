@@ -1,0 +1,144 @@
+---
+/**
+ * A slow horizontal run of names. Pauses on hover, on keyboard focus and with the button
+ * (WCAG 2.2.2). With reduced motion it becomes a static, wrapping list.
+ */
+interface Props {
+  items: string[];
+  label: string;
+}
+const { items, label } = Astro.props;
+---
+
+<div class="marquee" data-marquee>
+  <div class="marquee__viewport">
+    <div class="marquee__track">
+      <ul role="list" aria-label={label}>
+        {
+          items.map((item) => (
+            <li>
+              <span class="via" aria-hidden="true" />
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+      <ul role="list" aria-hidden="true" class="marquee__clone">
+        {
+          items.map((item) => (
+            <li>
+              <span class="via" />
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+  <div class="wrap marquee__controls">
+    <button type="button" class="marquee__toggle" aria-pressed="false">Pause scrolling</button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-marquee]').forEach((marquee) => {
+    const button = marquee.querySelector<HTMLButtonElement>('.marquee__toggle');
+    button?.addEventListener('click', () => {
+      const paused = marquee.classList.toggle('is-paused');
+      button.setAttribute('aria-pressed', String(paused));
+      button.textContent = paused ? 'Resume scrolling' : 'Pause scrolling';
+    });
+  });
+</script>
+
+<style>
+  .marquee__viewport {
+    overflow: hidden;
+    border-block: var(--trace) solid var(--pcb-dark);
+    padding-block: var(--space-5);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marquee-run 70s linear infinite;
+  }
+  .marquee:hover .marquee__track,
+  .marquee:focus-within .marquee__track,
+  .marquee.is-paused .marquee__track {
+    animation-play-state: paused;
+  }
+  .marquee ul {
+    display: flex;
+    flex: none;
+    margin: 0;
+  }
+  .marquee li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    padding-right: var(--space-5);
+    font-size: var(--text-lg);
+    font-weight: 640;
+    font-stretch: 110%;
+    letter-spacing: -0.012em;
+    white-space: nowrap;
+    color: var(--pcb-deep);
+  }
+  .marquee li:nth-child(even) {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 480;
+    font-size: calc(var(--text-lg) * 1.08);
+    letter-spacing: 0;
+  }
+  .marquee__controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--space-3);
+  }
+  .marquee__toggle {
+    min-height: 2.75rem;
+    padding: 0.4rem 0.2rem;
+    border: 0;
+    background: none;
+    color: var(--color-link);
+    font-size: var(--text-sm);
+    font-weight: 620;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    cursor: pointer;
+  }
+
+  @keyframes marquee-run {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__viewport {
+      mask-image: none;
+    }
+    .marquee__track {
+      width: auto;
+      animation: none;
+      padding-inline: var(--page-gutter);
+      max-width: calc(var(--page-max) + 2 * var(--page-gutter));
+      margin-inline: auto;
+    }
+    .marquee ul {
+      flex-wrap: wrap;
+      row-gap: var(--space-2);
+    }
+    .marquee li {
+      font-size: var(--text-md);
+      gap: var(--space-3);
+      padding-right: var(--space-4);
+    }
+    .marquee__clone,
+    .marquee__controls {
+      display: none !important;
+    }
+  }
+</style>

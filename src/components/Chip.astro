@@ -1,0 +1,290 @@
+---
+/**
+ * The hero chip: a QFP package on a board tile, built from plain elements and CSS 3D transforms.
+ * Where scroll-driven animations are supported it turns as the page scrolls; otherwise, and for
+ * visitors who prefer reduced motion, it holds its resting pose. Decorative, so hidden from
+ * assistive technology.
+ */
+const pinsX = Array.from({ length: 10 }, (_, i) => 134.5 + i * 18);
+
+// Traces fan out from chosen pins to vias. Coordinates are in the 440-unit board space.
+const traces = [
+  'M152.5 92V62L130 40H66',
+  'M188.5 92V44',
+  'M224.5 92V72l26-26h74l22-22',
+  'M278.5 92V64l22-22h40',
+  'M348 152.5h30l22-22V72',
+  'M348 206.5h62',
+  'M348 242.5h22l26 26v84',
+  'M348 296.5h16',
+  'M296.5 348v20l22 22h56',
+  'M242.5 348v26l-20 20h-42',
+  'M170.5 348v52',
+  'M134.5 348v24l-22 22H48',
+  'M92 278.5H66l-22 22v76',
+  'M92 224.5H30',
+  'M92 170.5H62L40 148.5V84',
+  'M92 134.5H76',
+];
+const vias = [
+  [66, 40], [188.5, 44], [346, 24], [340, 42], [400, 72], [410, 206.5], [396, 352],
+  [374, 390], [180, 394], [170.5, 400], [48, 394], [44, 376], [30, 224.5], [40, 84],
+];
+---
+
+<div class="chip-scene" aria-hidden="true">
+  <div class="chip-rig">
+    <div class="pcb">
+      <svg viewBox="0 0 440 440" fill="none">
+        <g class="pcb__traces" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+          {traces.map((d) => <path d={d} />)}
+        </g>
+        <g class="pcb__pads">
+          {pinsX.map((x) => <rect x={x - 4.5} y="84" width="9" height="16" rx="1" />)}
+          {pinsX.map((x) => <rect x={x - 4.5} y="340" width="9" height="16" rx="1" />)}
+          {pinsX.map((y) => <rect x="84" y={y - 4.5} width="16" height="9" rx="1" />)}
+          {pinsX.map((y) => <rect x="340" y={y - 4.5} width="16" height="9" rx="1" />)}
+          <rect x="364" y="289" width="9" height="15" rx="1" />
+          <rect x="384" y="289" width="9" height="15" rx="1" />
+          <rect x="61" y="127" width="15" height="9" rx="1" />
+          <rect x="61" y="107" width="15" height="9" rx="1" />
+        </g>
+        <g class="pcb__parts">
+          <rect x="371" y="290.5" width="15" height="12" rx="1" />
+          <rect x="62.5" y="114" width="12" height="15" rx="1" />
+        </g>
+        <g class="pcb__vias" stroke-width="3">
+          {vias.map(([cx, cy]) => <circle cx={cx} cy={cy} r="5" />)}
+          <circle cx="24" cy="24" r="8" />
+          <circle cx="416" cy="24" r="8" />
+          <circle cx="24" cy="416" r="8" />
+          <circle cx="416" cy="416" r="8" />
+        </g>
+        <g class="pcb__silk">
+          <path d="M80 80h14M80 80v14M360 80h-14M360 80v14M80 360h14M80 360v-14M360 360h-14M360 360v-14" />
+          <text x="100" y="74">U1</text>
+          <text x="366" y="282">R1</text>
+          <text x="44" y="112">C1</text>
+          <text x="250" y="424">ECBA-01 REV B</text>
+        </g>
+      </svg>
+    </div>
+    <div class="chip-shadow"></div>
+    <div class="leads"></div>
+    <div class="pkg">
+      <div class="pkg__side pkg__side--n"></div>
+      <div class="pkg__side pkg__side--e"></div>
+      <div class="pkg__side pkg__side--s"></div>
+      <div class="pkg__side pkg__side--w"></div>
+      <div class="pkg__top">
+        <span class="pkg__dot"></span>
+        <span class="pkg__mark">ECBA</span>
+        <span class="pkg__line">TX2026</span>
+        <span class="pkg__line">UT AUSTIN</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .chip-scene {
+    --body: 20em;
+    --height: 2.6em;
+    font-size: clamp(6.2px, 0.5px + 0.82vw, 11.5px);
+    position: relative;
+    width: 44em;
+    height: 44em;
+    perspective: 110em;
+  }
+  .chip-rig {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: rotateX(57deg) rotateZ(-38deg);
+  }
+  .chip-rig > * {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }
+
+  /* Board tile */
+  .pcb {
+    width: 44em;
+    height: 44em;
+    margin: -22em 0 0 -22em;
+    border-radius: 1.4em;
+    background:
+      radial-gradient(circle at 30% 20%, rgb(181 202 118 / 0.1), transparent 55%),
+      var(--pcb-deep);
+    box-shadow:
+      0 0 0 0.12em rgb(181 202 118 / 0.22) inset,
+      2.4em 3em 5em rgb(8 14 4 / 0.55);
+  }
+  .pcb svg {
+    width: 100%;
+    height: 100%;
+  }
+  .pcb__traces {
+    stroke: var(--pcb-moss);
+  }
+  .pcb__pads rect {
+    fill: var(--pad-gold);
+  }
+  .pcb__parts rect {
+    fill: #20261a;
+  }
+  .pcb__vias circle {
+    fill: var(--pcb-board);
+    stroke: var(--pad-gold);
+  }
+  .pcb__silk path {
+    stroke: var(--pcb-mist);
+    stroke-width: 1.4;
+    opacity: 0.8;
+  }
+  .pcb__silk text {
+    fill: var(--pcb-mist);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    font-stretch: 112%;
+    letter-spacing: 0.06em;
+    opacity: 0.85;
+  }
+
+  .chip-shadow {
+    width: calc(var(--body) + 3em);
+    height: calc(var(--body) + 3em);
+    margin: calc(var(--body) / -2 - 0.6em) 0 0 calc(var(--body) / -2 - 0.6em);
+    background: rgb(8 14 4 / 0.5);
+    filter: blur(1.1em);
+    transform: translateZ(0.1em);
+  }
+
+  /* Ten leads per side, drawn as gradient stripes on one plane */
+  .leads {
+    --pin: linear-gradient(#e9e3cf, #b9b29a);
+    width: calc(var(--body) + 5.6em);
+    height: calc(var(--body) + 5.6em);
+    margin: calc(var(--body) / -2 - 2.8em) 0 0 calc(var(--body) / -2 - 2.8em);
+    transform: translateZ(0.7em);
+    background:
+      repeating-linear-gradient(90deg, #d8d2bc 0 0.9em, transparent 0.9em 1.8em) center top / 17.1em 3em no-repeat,
+      repeating-linear-gradient(90deg, #d8d2bc 0 0.9em, transparent 0.9em 1.8em) center bottom / 17.1em 3em no-repeat,
+      repeating-linear-gradient(0deg, #c4bea8 0 0.9em, transparent 0.9em 1.8em) left center / 3em 17.1em no-repeat,
+      repeating-linear-gradient(0deg, #c4bea8 0 0.9em, transparent 0.9em 1.8em) right center / 3em 17.1em no-repeat;
+  }
+
+  /* Package body */
+  .pkg {
+    width: var(--body);
+    height: var(--body);
+    margin: calc(var(--body) / -2) 0 0 calc(var(--body) / -2);
+    transform-style: preserve-3d;
+    transform: translateZ(0.3em);
+  }
+  .pkg__side {
+    position: absolute;
+    background: #14170f;
+  }
+  .pkg__side--n,
+  .pkg__side--s {
+    left: 0;
+    width: 100%;
+    height: var(--height);
+  }
+  .pkg__side--e,
+  .pkg__side--w {
+    top: 0;
+    width: var(--height);
+    height: 100%;
+  }
+  .pkg__side--n {
+    top: 0;
+    transform-origin: top;
+    transform: rotateX(90deg);
+    background: #0d0f0a;
+  }
+  .pkg__side--s {
+    bottom: 0;
+    transform-origin: bottom;
+    transform: rotateX(-90deg);
+    background: #1d2117;
+  }
+  .pkg__side--w {
+    left: 0;
+    transform-origin: left;
+    transform: rotateY(-90deg);
+    background: #171a12;
+  }
+  .pkg__side--e {
+    right: 0;
+    transform-origin: right;
+    transform: rotateY(90deg);
+    background: #0f110b;
+  }
+  .pkg__top {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 2.2em;
+    transform: translateZ(var(--height));
+    border-radius: 0.35em;
+    background:
+      linear-gradient(135deg, rgb(255 255 255 / 0.09), transparent 45%),
+      #23271c;
+    box-shadow: 0 0 0 0.14em rgb(255 255 255 / 0.05) inset;
+    color: #c9cdbb;
+    font-family: var(--font-sans);
+    font-stretch: 118%;
+    line-height: 1.05;
+  }
+  .pkg__dot {
+    position: absolute;
+    left: 1.5em;
+    top: 1.5em;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    background: #15180f;
+    box-shadow: 0 0.08em 0 rgb(255 255 255 / 0.12);
+  }
+  .pkg__mark {
+    font-size: 4.6em;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .pkg__line {
+    margin-top: 0.35em;
+    font-size: 1.45em;
+    font-weight: 560;
+    letter-spacing: 0.14em;
+    opacity: 0.8;
+  }
+
+  @keyframes chip-turn {
+    from {
+      transform: rotateX(57deg) rotateZ(-38deg);
+    }
+    to {
+      transform: rotateX(24deg) rotateZ(52deg);
+    }
+  }
+
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .chip-rig {
+        animation: chip-turn linear both;
+      }
+      /* Kept in its own rule: CSS minifiers fold animation-timeline into the animation
+         shorthand, which browsers then reject. A separate selector prevents the merge. */
+      .chip-scene .chip-rig {
+        animation-timeline: scroll(root block);
+        animation-range: 0 110vh;
+      }
+    }
+  }
+</style>

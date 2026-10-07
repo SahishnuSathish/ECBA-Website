@@ -1,0 +1,143 @@
+---
+/**
+ * Build, Connect, Develop drawn as three parts in series on one wire. A signal node rides the
+ * wire as the section scrolls (scroll-driven CSS; static where unsupported or with reduced motion).
+ */
+import { pillars } from '../data/home';
+---
+
+<ol class="schematic" role="list">
+  <li class="schematic__node" aria-hidden="true"></li>
+  {
+    pillars.map((pillar) => (
+      <li class="schematic__item">
+        <svg class="schematic__symbol" viewBox="0 0 96 96" aria-hidden="true">
+          {pillar.symbol === 'ic' && (
+            <>
+              <path d="M10 34h14M10 48h14M10 62h14M72 34h14M72 48h14M72 62h14" />
+              <rect class="fill" x="24" y="22" width="48" height="52" rx="2" />
+              <circle class="dot" cx="33" cy="31" r="2.5" />
+            </>
+          )}
+          {pillar.symbol === 'junction' && (
+            <>
+              <path d="M16 48h64" />
+              <circle class="fill" cx="12" cy="48" r="5" />
+              <circle class="fill" cx="84" cy="48" r="5" />
+              <circle class="dot" cx="48" cy="48" r="7" />
+            </>
+          )}
+          {pillar.symbol === 'amp' && (
+            <>
+              <path class="fill" d="M20 24h56L48 74z" />
+              <path d="M40 38h16M48 30v16" />
+            </>
+          )}
+        </svg>
+        <div class="schematic__body">
+          <h3 class="voice-eng schematic__title">{pillar.title}</h3>
+          <p>{pillar.body}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .schematic {
+    --col: 6rem;
+    position: relative;
+    margin: 0;
+    view-timeline: --schematic block;
+  }
+  /* The wire */
+  .schematic::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--col) / 2 - 1px);
+    top: 0;
+    bottom: 0;
+    width: var(--trace);
+    background: var(--pcb-dark);
+  }
+  .schematic__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--col) minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+    padding-block: var(--space-6);
+  }
+  .schematic__symbol {
+    width: var(--col);
+    height: var(--col);
+    fill: none;
+    stroke: var(--pcb-dark);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .schematic__symbol .fill {
+    fill: var(--surface, var(--paper));
+  }
+  .schematic__symbol .dot {
+    fill: var(--pcb-dark);
+    stroke: none;
+  }
+  .schematic__title {
+    font-size: var(--text-xl);
+    line-height: 1;
+    margin-top: 1.6rem;
+  }
+  .schematic__body p {
+    margin-top: var(--space-3);
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+
+  .schematic__node {
+    position: absolute;
+    z-index: 1;
+    left: calc(var(--col) / 2 - 0.5rem);
+    top: 0;
+    width: 1rem;
+    height: 1rem;
+    margin-top: -0.5rem;
+    border-radius: 50%;
+    background: var(--pad-gold);
+    border: 3px solid var(--pcb-dark);
+  }
+
+  @keyframes node-travel {
+    from {
+      top: 0;
+    }
+    to {
+      top: 100%;
+    }
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .schematic__node {
+        animation: node-travel linear both;
+      }
+      /* Separate rule so minifiers cannot fold the timeline into the shorthand (see Chip.astro). */
+      .schematic .schematic__node {
+        animation-timeline: --schematic;
+        animation-range: entry 60% exit 40%;
+      }
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .schematic {
+      --col: 4rem;
+    }
+    .schematic__item {
+      gap: var(--space-4);
+    }
+    .schematic__title {
+      margin-top: 0.75rem;
+    }
+  }
+</style>

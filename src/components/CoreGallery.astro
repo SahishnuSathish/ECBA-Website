@@ -1,0 +1,308 @@
+---
+/**
+ * Technical cores as a horizontal, swipeable strip. Each plate is a button that opens a
+ * dialog with the core's official description and a selection of approved electives.
+ */
+import CoreArt from './CoreArt.astro';
+import { techCores, sources } from '../data/program';
+---
+
+<div class="cores" data-cores>
+  <div class="wrap cores__bar">
+    <p class="small soft">{techCores.length} technical components. Select one for its description and electives.</p>
+    <div class="cores__arrows">
+      <button type="button" class="cores__arrow" data-dir="-1" aria-label="Scroll to previous cores">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+      </button>
+      <button type="button" class="cores__arrow" data-dir="1" aria-label="Scroll to next cores">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  <ul class="cores__strip" role="list" tabindex="-1">
+    {
+      techCores.map((core) => (
+        <li>
+          <button type="button" class="core-card" data-open-dialog={`core-${core.id}`} aria-haspopup="dialog">
+            <span class="core-card__art">
+              <CoreArt id={core.id} />
+            </span>
+            <span class="core-card__text">
+              <span class="core-card__area">{core.area}</span>
+              <span class="core-card__name">{core.short}</span>
+              <span class="core-card__more">
+                <span class="visually-hidden">{core.name}. </span>View details
+              </span>
+            </span>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+{
+  techCores.map((core) => (
+    <dialog class="core-dialog" id={`core-${core.id}`} aria-labelledby={`core-${core.id}-title`}>
+      <div class="core-dialog__inner">
+        <button type="button" class="core-dialog__close" data-close-dialog>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          <span class="visually-hidden">Close</span>
+        </button>
+        <div class="core-dialog__art">
+          <CoreArt id={core.id} />
+        </div>
+        <div class="core-dialog__body">
+          <p class="small soft">{core.area} technical component</p>
+          <h3 class="voice-eng core-dialog__title" id={`core-${core.id}-title`}>
+            {core.name}
+          </h3>
+          <p class="core-dialog__desc">{core.description}</p>
+          <h4 class="core-dialog__sub">Approved electives include</h4>
+          <ul class="core-dialog__list" role="list">
+            {core.electives.map((elective) => (
+              <li>
+                <span class="via" aria-hidden="true" />
+                {elective}
+              </li>
+            ))}
+          </ul>
+          <p class="fine soft core-dialog__source">
+            {'Description from Texas ECE. Electives are a selection from the '}
+            <a class="ext" href={sources.techCorePacket.href} rel="noopener">{sources.techCorePacket.label}</a>
+            {', which lists every option and its prerequisites.'}
+          </p>
+        </div>
+      </div>
+    </dialog>
+  ))
+}
+
+<script>
+  import { wireDialogs } from '../scripts/dialogs';
+  wireDialogs();
+
+  document.querySelectorAll<HTMLElement>('[data-cores]').forEach((root) => {
+    const strip = root.querySelector<HTMLElement>('.cores__strip');
+    if (!strip) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    root.querySelectorAll<HTMLButtonElement>('.cores__arrow').forEach((arrow) => {
+      arrow.addEventListener('click', () => {
+        const card = strip.querySelector<HTMLElement>('li');
+        const step = (card?.offsetWidth ?? 280) * 2;
+        strip.scrollBy({ left: step * Number(arrow.dataset.dir), behavior: reduce.matches ? 'auto' : 'smooth' });
+      });
+    });
+  });
+</script>
+
+<style>
+  .cores__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  .cores__arrows {
+    display: flex;
+    gap: var(--space-2);
+  }
+  .cores__arrow {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 2px solid var(--pcb-deep);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--pcb-deep);
+    cursor: pointer;
+  }
+  .cores__arrow:hover {
+    background: var(--pcb-deep);
+    color: var(--paper);
+  }
+  .cores__arrow svg,
+  .core-dialog__close svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .cores__strip {
+    --edge: max(var(--page-gutter), calc((100vw - var(--page-max)) / 2));
+    display: flex;
+    gap: var(--space-4);
+    margin: 0;
+    padding: var(--space-2) var(--edge) var(--space-5);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--edge);
+    scrollbar-width: thin;
+    scrollbar-color: var(--pcb-sage) transparent;
+  }
+  .cores__strip li {
+    flex: none;
+    width: min(17.5rem, 72vw);
+    scroll-snap-align: start;
+  }
+
+  .core-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--pcb-deep);
+    color: var(--paper);
+    text-align: left;
+    cursor: pointer;
+  }
+  .core-card__art {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+  .core-card__art :global(svg) {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .core-card:hover .core-card__art :global(svg),
+  .core-card:focus-visible .core-card__art :global(svg) {
+    transform: scale(1.05);
+  }
+  .core-card__text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-4) var(--space-4);
+    border-top: var(--trace) solid var(--pcb-moss);
+  }
+  .core-card__area {
+    font-size: var(--text-xs);
+    color: var(--pcb-lime);
+  }
+  .core-card__name {
+    font-size: var(--text-md);
+    font-weight: 720;
+    font-stretch: 108%;
+    line-height: 1.15;
+    letter-spacing: -0.012em;
+  }
+  .core-card__more {
+    margin-top: auto;
+    padding-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--pcb-mist);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .core-dialog {
+    width: min(58rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--paper);
+    color: var(--pcb-ink);
+    overflow: auto;
+  }
+  .core-dialog::backdrop {
+    background: rgb(15 22 9 / 0.72);
+  }
+  .core-dialog[open] {
+    animation: dialog-in var(--dur-base) var(--ease-out);
+  }
+  @keyframes dialog-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+  }
+  .core-dialog__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+  .core-dialog__art {
+    min-height: 14rem;
+    background: var(--pcb-deep);
+  }
+  .core-dialog__body {
+    padding: var(--space-7) var(--space-6) var(--space-6);
+  }
+  .core-dialog__title {
+    margin-top: var(--space-2);
+    font-size: var(--text-lg);
+    line-height: 1.12;
+    max-width: 18em;
+  }
+  .core-dialog__desc {
+    margin-top: var(--space-4);
+  }
+  .core-dialog__sub {
+    margin-top: var(--space-5);
+    font-size: var(--text-base);
+    font-weight: 720;
+  }
+  .core-dialog__list {
+    margin-top: var(--space-2);
+  }
+  .core-dialog__list li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding-block: 0.4rem;
+    border-top: 1px solid var(--color-rule);
+    font-size: var(--text-sm);
+  }
+  .core-dialog__list .via {
+    transform: translateY(0.08rem);
+  }
+  .core-dialog__source {
+    margin-top: var(--space-4);
+  }
+  .core-dialog__close {
+    position: absolute;
+    z-index: 1;
+    top: var(--space-3);
+    right: var(--space-3);
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 2px solid var(--pcb-deep);
+    border-radius: 50%;
+    background: var(--paper);
+    color: var(--pcb-deep);
+    cursor: pointer;
+  }
+  .core-dialog__close:hover {
+    background: var(--pcb-deep);
+    color: var(--paper);
+  }
+
+  @media (max-width: 46rem) {
+    .core-dialog__inner {
+      grid-template-columns: 1fr;
+    }
+    .core-dialog__art {
+      min-height: 0;
+      aspect-ratio: 16 / 7;
+    }
+    .core-dialog__body {
+      padding: var(--space-5) var(--space-5) var(--space-6);
+    }
+  }
+</style>

@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { url } from '../lib/url';
+---
+
+<Base title="Page not found" description="This page does not exist on the ECBA site. Use the navigation to find the program, partner, events and people pages.">
+  <PageHero
+    eng="Open circuit."
+    biz="This page is not connected to anything."
+    lead="The address may be mistyped, or the page may have moved."
+  >
+    <div class="btn-row">
+      <a class="btn btn--solid" href={url('/')}>Go to the home page</a>
+      <a class="btn btn--line" href={url('/partners')}>Partner with us</a>
+    </div>
+  </PageHero>
+</Base>
