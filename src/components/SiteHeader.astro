@@ -114,18 +114,17 @@ const isCurrent = (href: string) => path === href;
   .site-nav a:not(.btn):hover {
     color: var(--pcb-olive);
   }
-  /* The current page is marked by a via seated on the header trace. */
+  /* The current page is underlined with a short gold trace beneath its label. */
+  .site-nav a[aria-current='page']:not(.btn) {
+    color: var(--pcb-deep);
+  }
   .site-nav a[aria-current='page']:not(.btn)::after {
     content: '';
     position: absolute;
-    left: 50%;
-    bottom: calc(-1.02rem - var(--trace));
-    width: 0.8rem;
-    height: 0.8rem;
-    margin-left: -0.4rem;
-    border-radius: 50%;
-    border: 3px solid var(--pcb-dark);
-    background: var(--pad-gold);
+    inset: auto 0.9rem 0.25rem;
+    height: 3px;
+    border-radius: 1.5px;
+    background: var(--pad-gold-deep);
   }
   .site-nav__cta {
     margin-left: var(--space-3);
@@ -195,11 +194,14 @@ const isCurrent = (href: string) => path === href;
       border-top: 1px solid var(--color-rule);
       font-size: var(--text-md);
     }
+    /* Stacked rows are full width, so the current page gets a filled row instead. */
+    .site-nav a[aria-current='page']:not(.btn) {
+      padding-inline: 0.9rem;
+      background: var(--pcb-wash);
+      box-shadow: inset 4px 0 0 var(--pad-gold-deep);
+    }
     .site-nav a[aria-current='page']:not(.btn)::after {
-      left: auto;
-      right: 0.25rem;
-      bottom: 50%;
-      margin: 0 0 -0.4rem;
+      content: none;
     }
     .site-nav__cta {
       margin: var(--space-3) 0 0;

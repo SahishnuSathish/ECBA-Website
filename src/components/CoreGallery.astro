@@ -3,7 +3,7 @@
  * Technical cores as a horizontal, swipeable strip. Each plate is a button that opens a
  * dialog with the core's official description and a selection of approved electives.
  */
-import CoreArt from './CoreArt.astro';
+import CorePhoto from './CorePhoto.astro';
 import { techCores, sources } from '../data/program';
 ---
 
@@ -26,7 +26,7 @@ import { techCores, sources } from '../data/program';
         <li>
           <button type="button" class="core-card" data-open-dialog={`core-${core.id}`} aria-haspopup="dialog">
             <span class="core-card__art">
-              <CoreArt id={core.id} />
+              <CorePhoto id={core.id} sizes="(max-width: 24rem) 72vw, 17.5rem" />
             </span>
             <span class="core-card__text">
               <span class="core-card__area">{core.area}</span>
@@ -51,7 +51,7 @@ import { techCores, sources } from '../data/program';
           <span class="visually-hidden">Close</span>
         </button>
         <div class="core-dialog__art">
-          <CoreArt id={core.id} />
+          <CorePhoto id={core.id} alt={core.photo.alt} sizes="(max-width: 46rem) 100vw, 56rem" />
         </div>
         <div class="core-dialog__body">
           <p class="small soft">{core.area} technical component</p>
@@ -72,6 +72,11 @@ import { techCores, sources } from '../data/program';
             {'Description from Texas ECE. Electives are a selection from the '}
             <a class="ext" href={sources.techCorePacket.href} rel="noopener">{sources.techCorePacket.label}</a>
             {', which lists every option and its prerequisites.'}
+          </p>
+          <p class="fine soft core-dialog__credit">
+            {'Photo: '}
+            <a class="ext" href={core.photo.source} rel="noopener">{core.photo.credit}</a>
+            {`, ${core.photo.license}, via Wikimedia Commons. Cropped.`}
           </p>
         </div>
       </div>
@@ -173,11 +178,11 @@ import { techCores, sources } from '../data/program';
     aspect-ratio: 4 / 3;
     overflow: hidden;
   }
-  .core-card__art :global(svg) {
+  .core-card__art :global(img) {
     transition: transform var(--dur-base) var(--ease-out);
   }
-  .core-card:hover .core-card__art :global(svg),
-  .core-card:focus-visible .core-card__art :global(svg) {
+  .core-card:hover .core-card__art :global(img),
+  .core-card:focus-visible .core-card__art :global(img) {
     transform: scale(1.05);
   }
   .core-card__text {
@@ -236,8 +241,14 @@ import { techCores, sources } from '../data/program';
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   }
   .core-dialog__art {
+    position: relative;
     min-height: 14rem;
     background: var(--pcb-deep);
+  }
+  /* Out of flow so the photo fills the column without setting the dialog's height. */
+  .core-dialog__art :global(img) {
+    position: absolute;
+    inset: 0;
   }
   .core-dialog__body {
     padding: var(--space-7) var(--space-6) var(--space-6);
@@ -272,6 +283,9 @@ import { techCores, sources } from '../data/program';
   }
   .core-dialog__source {
     margin-top: var(--space-4);
+  }
+  .core-dialog__credit {
+    margin-top: var(--space-2);
   }
   .core-dialog__close {
     position: absolute;

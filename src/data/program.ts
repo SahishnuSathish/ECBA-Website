@@ -3,6 +3,7 @@
  * Course numbers and titles: 2026–2028 ECB flowchart (Texas ECB, linked from ecb.utexas.edu/academics).
  * Technical component descriptions: ece.utexas.edu/academics/undergraduate/techcore.
  * Elective lists: ECE Technical Component Packet (updated 7.6.26).
+ * Technical component photos: Wikimedia Commons, credited per core below and in docs/CONTENT.md.
  * This is a student-organization summary. The official catalog and advisors are authoritative.
  */
 
@@ -124,6 +125,8 @@ export type TechCore = {
   description: string;
   /** A selection of pre-approved electives from the Technical Component Packet. */
   electives: string[];
+  /** The file is src/assets/cores/<id>.jpg, cropped from the original at `source`. */
+  photo: { alt: string; credit: string; license: string; source: string };
 };
 
 export const techCores: TechCore[] = [
@@ -141,6 +144,12 @@ export const techCores: TechCore[] = [
       'ECE 445S Real-Time Digital Signal Processing Laboratory',
       'ECE 471C Wireless Communications Laboratory',
     ],
+    photo: {
+      alt: 'Microwave dish antennas clustered on a telecommunications tower',
+      credit: 'Bidgee',
+      license: 'CC BY-SA 2.5 AU',
+      source: 'https://commons.wikimedia.org/wiki/File:Parabolic_antennas_on_a_telecommunications_tower_on_Willans_Hill.jpg',
+    },
   },
   {
     id: 'circuits',
@@ -156,6 +165,12 @@ export const techCores: TechCore[] = [
       'ECE 379K ASIC Design Lab I',
       'ECE 363M Microwave and Radio Frequency Engineering',
     ],
+    photo: {
+      alt: 'A patterned 12-inch silicon wafer reflecting bands of color',
+      credit: 'Peellden',
+      license: 'CC BY-SA 3.0',
+      source: 'https://commons.wikimedia.org/wiki/File:12-inch_silicon_wafer.jpg',
+    },
   },
   {
     id: 'energy',
@@ -171,6 +186,12 @@ export const techCores: TechCore[] = [
       'ECE 362Q Power Quality and Harmonics',
       'ECE 379K Connected Autonomous Electric Vehicles',
     ],
+    photo: {
+      alt: 'Rows of solar panels at UT Austin’s J.J. Pickle Research Campus',
+      credit: 'U.S. Department of State',
+      license: 'public domain',
+      source: 'https://commons.wikimedia.org/wiki/File:Secretary_Kerry_Learns_About_the_Solar_Fields_at_the_Pickle_Research_Center_at_the_University_of_Texas_at_Austin_(26655459466).jpg',
+    },
   },
   {
     id: 'fields',
@@ -186,6 +207,12 @@ export const techCores: TechCore[] = [
       'ECE 361R Radio Frequency Circuit Design',
       'ECE 363N Engineering Acoustics',
     ],
+    photo: {
+      alt: 'A large parabolic dish antenna pointed at the sky',
+      credit: 'Galen Crout',
+      license: 'CC0',
+      source: 'https://commons.wikimedia.org/wiki/File:Satellite_Antenna_Skyward_(Unsplash).jpg',
+    },
   },
   {
     id: 'nano',
@@ -201,6 +228,12 @@ export const techCores: TechCore[] = [
       'ECE 339S Solar Energy Conversion Devices',
       'ECE 460R Introduction to VLSI Design',
     ],
+    photo: {
+      alt: 'A researcher in a cleanroom suit holding a silicon wafer under yellow light',
+      credit: 'U.S. Department of Energy',
+      license: 'public domain',
+      source: 'https://commons.wikimedia.org/wiki/File:Silicon_wafer_researcher.jpg',
+    },
   },
   {
     id: 'architecture',
@@ -216,6 +249,12 @@ export const techCores: TechCore[] = [
       'ECE 361C Multicore Computing',
       'ECE 460R Introduction to VLSI Design',
     ],
+    photo: {
+      alt: 'A Texas Instruments Tiva C Series microcontroller development board',
+      credit: 'wdwd',
+      license: 'CC BY-SA 4.0',
+      source: 'https://commons.wikimedia.org/wiki/File:Tiva-C_LaunchPad_EK-TM4C1294XL.JPG',
+    },
   },
   {
     id: 'data',
@@ -231,6 +270,12 @@ export const techCores: TechCore[] = [
       'ECE 422C Software Design and Implementation II',
       'ECE 361N Information Security and Privacy',
     ],
+    photo: {
+      alt: 'The display wall in the visualization lab at UT Austin’s Texas Advanced Computing Center',
+      credit: 'UNM Research Data Services',
+      license: 'CC BY-SA 2.0',
+      source: 'https://commons.wikimedia.org/wiki/File:TACC_Visualization_Lab_(9807741915).jpg',
+    },
   },
   {
     id: 'software',
@@ -246,6 +291,12 @@ export const techCores: TechCore[] = [
       'ECE 360P Concurrent and Distributed Systems',
       'ECE 361Q Requirements Engineering',
     ],
+    photo: {
+      alt: 'Lines of source code on a computer monitor',
+      credit: 'Markus Spiske',
+      license: 'CC0',
+      source: 'https://commons.wikimedia.org/wiki/File:Code_on_computer_monitor_(Unsplash).jpg',
+    },
   },
 ];
 

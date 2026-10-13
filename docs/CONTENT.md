@@ -65,13 +65,28 @@ Officer role titles are placeholders, not ECBA's actual positions.
 | --- | --- | --- |
 | Event and community photos | "Photo to come" frames with the intended subject | Real photos, with permission from the people in them |
 | Officer headshots | Silhouettes | Headshots and consent |
-| Technical core photos | Drawn plates (`CoreArt.astro`) | Optional: photos ECBA has rights to. The Box link in the brief leads to the packet PDF, not photos |
+| Technical core photos | Freely licensed photos from Wikimedia Commons (credits below); two show UT Austin facilities | Optional: UT or ECBA photos for the other six. The Box link in the brief leads to the packet PDF, not photos |
 | ECBA logo | SVG redraw of the Canva draft (`EcbaLogo.astro`) | The exported original |
 | Company logos | Text names | Written permission per company, or keep text |
 | Student testimonials | An honest "collecting stories" state | Quotes with name, class and track; add to `testimonials` in `program.ts` |
 | Sponsorship packet file | Email request | Final public PDF or URL in `packages.packetUrl` |
 
 One name on the "Where is ECB" board ("BASE") could not be identified with confidence and was left out, as was Penn Carey Law pending confirmation of how to describe graduate programs.
+
+## Technical core photo credits
+
+Files are in `src/assets/cores/`, each cropped to 4:3 from the original. The credit and license also appear in each core's dialog; the CC BY and CC BY-SA licenses require that attribution to stay.
+
+| Core | Subject | Credit | License | Source |
+| --- | --- | --- | --- | --- |
+| Signals and networks | Microwave dishes on a telecommunications tower | Bidgee | CC BY-SA 2.5 AU | [Commons](https://commons.wikimedia.org/wiki/File:Parabolic_antennas_on_a_telecommunications_tower_on_Willans_Hill.jpg) |
+| Chips and circuits | Patterned 12-inch silicon wafer | Peellden | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:12-inch_silicon_wafer.jpg) |
+| Power and the grid | Solar field at UT Austin's J.J. Pickle Research Campus | U.S. Department of State | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Secretary_Kerry_Learns_About_the_Solar_Fields_at_the_Pickle_Research_Center_at_the_University_of_Texas_at_Austin_(26655459466).jpg) |
+| Antennas, optics, RF | Parabolic dish antenna | Galen Crout | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Satellite_Antenna_Skyward_(Unsplash).jpg) |
+| Materials and devices | Researcher holding a wafer in a cleanroom | U.S. Department of Energy | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Silicon_wafer_researcher.jpg) |
+| Processors and devices | TI Tiva C Series LaunchPad board | wdwd | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Tiva-C_LaunchPad_EK-TM4C1294XL.JPG) |
+| Learning from data | Visualization lab at UT Austin's Texas Advanced Computing Center | UNM Research Data Services | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:TACC_Visualization_Lab_(9807741915).jpg) |
+| Software at scale | Source code on a monitor | Markus Spiske | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Code_on_computer_monitor_(Unsplash).jpg) |
 
 ## Not shown, on purpose
 

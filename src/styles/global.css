@@ -300,7 +300,7 @@ textarea {
 
 /* ---------- Shared pieces ---------- */
 
-/* A via: the plated hole a trace ends on. Used as a list marker and nav indicator. */
+/* A via: the plated hole a trace ends on. Used as a list marker. */
 .via {
   display: inline-block;
   flex: none;

@@ -4,7 +4,7 @@
 
 **A board with two layers.** ECBA's subject is the printed circuit board, and its identity is the pairing of engineering and business. The design takes both literally.
 
-- **Material.** Solder-mask greens from ECBA's own palette board, off-white paper, and small gold marks for pads and vias. Lines turn on 45° chamfers the way traces do. Lists and the current navigation item are marked with vias.
+- **Material.** Solder-mask greens from ECBA's own palette board, off-white paper, and small gold marks for pads and vias. Lines turn on 45° chamfers the way traces do. Lists are marked with vias; the current navigation item is underlined with a short gold trace.
 - **Two voices.** Engineering speaks in Archivo, set wide and heavy. Business speaks in Newsreader italic. Every page title pairs one line of each, and the coursework comparison sets ECE courses in the sans and business courses in the serif, so the typography carries the duality instead of a color code.
 - **One showpiece.** The hero chip is the only elaborate effect. Everything else is quiet: rules, lists, tables.
 
@@ -26,7 +26,7 @@ The bar is modeled on the one UT already serves on ECBA's own University-hosted 
 
 Rules followed: the logo file is used as supplied (no redrawing, recoloring or text imitation), nothing else is placed in the bar, and it has no motion or custom styling. The component is `src/components/UTBrandBar.astro`.
 
-**The transition.** Below the bar the site header is paper-colored with the ECBA trace wordmark and the organization's full name. Its bottom edge is a single dark trace; the current page is marked by a gold via seated on that trace. The institutional orange stops at the bar, and the board begins under the header. Orange is used only in the brand bar and the required-links bar at the very bottom, so it always reads as the University's, never as decoration.
+**The transition.** Below the bar the site header is paper-colored with the ECBA trace wordmark and the organization's full name. Its bottom edge is a single dark trace; the current page is underlined with a short gold trace beneath its label (a filled row in the stacked mobile menu). The institutional orange stops at the bar, and the board begins under the header. Orange is used only in the brand bar and the required-links bar at the very bottom, so it always reads as the University's, never as decoration.
 
 **Footer.** The required links (Emergency Information, Site Policies, Web Accessibility Policy, Web Privacy Policy) and the copyright line sit in a burnt-orange bar, as on UT Drupal Kit sites. Above it, the ECBA footer states that this is a student organization and not the official program site.
 
